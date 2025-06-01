@@ -14,6 +14,8 @@ const store = useFilterStore()
 
 const preview = ref(false)
 
+
+
 function useResumenAcred(getId) {
   return useFetch(() => `${apiBase.value}/api/view/detalleAcred?${getId()}`)
 }
@@ -27,6 +29,15 @@ const getVto = (vto) => {
   if (vto) {
     const d = vto.split('-')
     return `${d[1]}/${d[0]}`
+  }
+  return null
+}
+
+
+const getPeriodo= (per) => {
+  if(per){
+    const p=per.split('-')
+    return`${p[0]}_${p[1]}`
   }
   return null
 }
@@ -132,10 +143,22 @@ const headers = [
 function exportFile() {
   const map1 = data.value.map((x) => {
     return [
+      x.GRUPOADICIONALID,
       getVto(x.PERIODO),
       getVto(x.FECHADEV),
-      x.IMPORTE,
-      x.CANTIDAD,
+      x.LIQUIDACIONID,
+      x.DOCUMENTO,
+      x.APELLIDO,
+      x.NOMBRE,
+      x.REPARTICIONID,
+      x.ORDEN,
+      x.AFILIADO,
+      x.CUIL,
+      x.CBU,
+      x.HABERES,
+      x.RETENCIONES,
+      x.NETO,
+      x.UNIORG,
       x.BLOQ,
       x.ESLEY,
       
@@ -143,10 +166,10 @@ function exportFile() {
   })
 
   const titulosTabla = [
-    'Adicional',
+    'Grupo Adicional',
     'Periodo',
-    'Fecha dev',
-    'LiquidacionId',
+    'Fecha dev',   
+    'Liquidacion Id',
     'Documento',
     'Apellido',
     'Nombre',
@@ -168,18 +191,19 @@ function exportFile() {
   const ws = utils.aoa_to_sheet(map1)
 
   ws['!cols'] = [
-    { wch: 15 },
+    { wch: 10 },
+    { wch: 10 },
+    { wch: 10 },
     { wch: 15 },
     { wch: 10 },
+    { wch: 15 },
+    { wch: 20 },
     { wch: 10 },
     { wch: 10 },
     { wch: 10 },
     { wch: 25 },
     { wch: 25 },
-    { wch: 10 },
-    { wch: 10 },
-    { wch: 15 },
-    { wch: 15 },
+    { wch: 20 },
     { wch: 15 },
     { wch: 15 },
     { wch: 15 },
@@ -192,7 +216,7 @@ function exportFile() {
   utils.book_append_sheet(wb, ws, 'Data')
 
   /* export to XLSX */
-  writeFileXLSX(wb, `${store.liqCompactString}_Detalle_Acreditaciones.xlsx`, {
+  writeFileXLSX(wb, `Detalle_Acreditaciones_${getPeriodo(store.periodoString)}.xlsx`, {
     compression: true
   })
 }
@@ -202,7 +226,7 @@ function exportFile() {
  <v-container>
    <RepoHeader title="Detalle Acreditaciones" :subtitle="store.liqString">
     <v-btn color="primary" :disabled="!data" @click="preview = !preview">Previsualizar</v-btn>
-    <v-btn color="primary" :disabled="!data" @click="printData" >Descargar</v-btn>
+    <v-btn color="primary" :disabled="!data" @click="exportFile" >Descargar</v-btn>
     </RepoHeader>
 
     <v-row v-if="preview">
@@ -224,9 +248,9 @@ function exportFile() {
             <td class="text-right">{{ item.LIQUIDACIONID}}</td>
             <td class="text-left">{{ item.DOCUMENTO}}</td>
             <td class="text-left">{{ item.APELLIDO}}</td>
-            <td class="text-right">{{ item.NOMBRE }}</td>
-            <td class="text-left">{{ item.REPARTICIONID}}</td>
-            <td class="text-left">{{ item.ORDEN}}</td>
+            <td class="text-left">{{ item.NOMBRE }}</td>
+            <td class="text-right">{{ item.REPARTICIONID}}</td>
+            <td class="text-right">{{ item.ORDEN}}</td>
             <td class="text-right">{{ item.AFILIADO}}</td>
             <td class="text-left">{{ item.CUIL}}</td>            
             <td class="text-left">{{ item.CBU}}</td>

@@ -42,7 +42,13 @@ const getTxtFromAPI = async (url) => {
   return urlSalida
 }
 
-
+const getPeriodo= (per) => {
+  if(per){
+    const p=per.split('-')
+    return`${p[0]}_${p[1]}`
+  }
+  return null
+}
 
 async function downloadAcred() {
 
@@ -57,7 +63,7 @@ async function downloadAcred() {
 
   const a = document.createElement('a')
   a.href = urlDescarga
-  a.download = `Archivo_Acreditaciones_${store.periodoString}`; //data.value[0].NOMBREARCHIVO // Nombre con el que se descargará el archivo
+  a.download = `Acreditaciones_${getPeriodo(store.periodoString)}`; //data.value[0].NOMBREARCHIVO // Nombre con el que se descargará el archivo
   document.body.appendChild(a)
   a.click() // Simula el clic para iniciar la descarga
   a.remove() // Elimina el enlace del DOM

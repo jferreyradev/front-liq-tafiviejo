@@ -5,12 +5,17 @@ import { useFetch } from '@/composables/useFetch'
 import RepoHeader from './RepoHeader.vue'
 import { useLiqStore } from '@/stores/liqStore.js'
 import { useEndPoints } from '@/composables/useEndPoints'
+import { useBoletatxt } from '@/stores/boletaStore'
+
+
 
 const { apiBase } = useEndPoints()
 
 const store = useFilterStore()
 
 const liqStore = useLiqStore()
+
+const liqStoreBoleta = useBoletatxt()
 
 function useLiqBoletas(getId) {
   return useFetch(() => `${apiBase.value}/api/view/boletas?${getId()}`)
@@ -47,6 +52,19 @@ function handleDownload(idliq) {
   //console.log(idliq)  
   liqStore.setLiqItems(idliq)
   console.log(liqStore.getLiqItems.value)
+}
+
+async function handleDownloadPdf(idliq) {
+  //liqStore.setBoleta(idliq)
+  /*
+    console.log(liqStore.boletaCabPie)
+    console.log(liqStore.boletaDet)
+    */
+  //console.log(liqStore.getBoletaTXT)
+  console.log(idliq)
+  await liqStoreBoleta.setId(idliq)
+  //await liqStoreBoleta.createBoleta()
+  await liqStoreBoleta.createPdf()
 }
 
 </script>
@@ -86,6 +104,7 @@ function handleDownload(idliq) {
 
           <template v-slot:item.LIQUIDACIONID="{ value }">
             <a :href="apiBase + '/api/boleta?IdLiq=' + value" target="_blank" >descargar</a>
+             <!-- <v-btn @click="handleDownloadPdf(value)">Descargar</v-btn>  -->
           </template>
         </v-data-table>
       </v-card>

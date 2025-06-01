@@ -32,11 +32,14 @@ export const useFilterStore = defineStore('filter', {
     nroadi: 0,
     year: 0,
     month: 0,
+    ley:0,
     serverConfig: {}
   }),
   getters: {
     filterString: (state) =>
       `TipoLiquidacionId=${state.tipoliq}&GrupoAdicionalId=${state.nroadi}&Periodo=01/${state.month}/${state.year}`,
+    filterStringLey: (state) =>
+      `TipoLiquidacionId=${state.tipoliq}&GrupoAdicionalId=${state.nroadi}&Ley=${state.ley}&Periodo=01/${state.month}/${state.year}`,
     filterPeriodoString: (state) => `Periodo=01/${state.month}/${state.year}`,
     periodoString: (state) => `${meses[state.month - 1]} - ${state.year}`,
     liqString: (state) =>

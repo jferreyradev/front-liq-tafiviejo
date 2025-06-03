@@ -9,7 +9,7 @@ const { apiBase } = useEndPoints()
 
 const store = useFilterStore()
 
-function printData() {
+async function printData() {
   let largeString = ""
   for (let index = 0; index < data.value.length; index++) {
     const element = data.value[index];
@@ -18,8 +18,8 @@ function printData() {
   }
 
   console.log(largeString )
-  //downloadTxt(largeString,data.value[0].NOMBREARCHIVO)
-  downloadIpsst()
+  downloadTxt(largeString,data.value[0].NOMBREARCHIVO)
+  //await downloadIpsst()
 }
 
 const getTxtFromAPI = async (url) => {

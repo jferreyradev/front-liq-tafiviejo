@@ -27,6 +27,13 @@ const getVto = (vto) => {
   }
   return null
 }
+const getPeriodo= (per) => {
+  if(per){
+    const p=per.split('-')
+    return`${p[0]}_${p[1]}`
+  }
+  return null
+}
 
 const headers = [
 {
@@ -103,7 +110,7 @@ function exportFile() {
   utils.book_append_sheet(wb, ws, 'Data')
 
   /* export to XLSX */
-  writeFileXLSX(wb, `${store.liqCompactString}_Acreditaciones.xlsx`, {
+  writeFileXLSX(wb, `Resumen_Acred_${getPeriodo(store.periodoString)}.xlsx`, {
     compression: true
   })
 }
@@ -131,7 +138,7 @@ function exportFile() {
             <td class="text-right">{{ getVto(item.PERIODO) }}</td>
             <td class="text-left">{{ getVto(item.FECHADEV) }}</td>
             <td class="text-right">{{ financial(item.IMPORTE) }}</td>
-            <td class="text-right">{{financial( item.CANTIDAD) }}</td>
+            <td class="text-right">{{ item.CANTIDAD }}</td>
             <td class="text-left">{{ item.BLOQ }}</td>
             <td class="text-left">{{ item.ESLEY }}</td>
           </tr>

@@ -216,7 +216,7 @@ function exportFile() {
   utils.book_append_sheet(wb, ws, 'Data')
 
   /* export to XLSX */
-  writeFileXLSX(wb, `Detalle_Acreditaciones_${getPeriodo(store.periodoString)}.xlsx`, {
+  writeFileXLSX(wb, `Detalle_Acred_${getPeriodo(store.periodoString)}.xlsx`, {
     compression: true
   })
 }

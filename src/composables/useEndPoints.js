@@ -1,6 +1,15 @@
 import { ref } from 'vue';
 
 const endpoints = {
+    desa: {
+//    boletas: 'https://api-boletas-9jn3t0ca7a3j.deno.dev', 
+//    base: 'https://midliq-api-hdprsd64qb7n.deno.dev',
+//    sp: 'https://josrferreyr-deno-api-su-79--desarrollo.deno.dev',
+    boletas: 'httpS://api-boletas-9jn3t0ca7a3j.deno.dev', 
+    base: 'http://181.87.21.163:3005',
+    sp: 'http://181.87.21.163:3005',
+
+  },
   prod: {
     boletas: 'https://dno-mid-tafiviejo-boletas.deno.dev',
     base: 'https://dno-mid-tafiviejo.deno.dev', 

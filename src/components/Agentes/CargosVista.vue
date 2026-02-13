@@ -192,7 +192,7 @@ function validarRegistro() {
                   hide-details="auto"
                   label="Orden"
                   lazy-validation
-                  :rules="[(val) => rules.longitudEntre(val, 1, 7), rules.number]"
+                  :rules="[(val) => rules.longitudEntre(val, 1, 7), ...rules.number]"
                   :readonly="soloLectura"
                 ></v-text-field>
               </v-col>
@@ -202,7 +202,7 @@ function validarRegistro() {
                   hide-details="auto"
                   label="Afiliado"
                   lazy-validation
-                  :rules="[(val) => rules.longitudEntre(val, 1, 7), rules.number]"
+                  :rules="[(val) => rules.longitudEntre(val, 1, 7), ...rules.number]"
                   :readonly="soloLectura"
                 ></v-text-field>
               </v-col>
@@ -236,7 +236,7 @@ function validarRegistro() {
                   hide-details="auto"
                   label="Antigüedad"
                   lazy-validation
-                  :rules="[(val) => rules.longitudEntre(val, 1, 2), rules.number]"
+                  :rules="[(val) => rules.longitudEntre(val, 1, 2), ...rules.number]"
                   :readonly="soloLectura"
                 ></v-text-field>
               </v-col>
@@ -260,7 +260,7 @@ function validarRegistro() {
                   hide-details="auto"
                   label="Categoría"
                   lazy-validation
-                  :rules="[(val) => rules.longitudEntre(val, 1, 2), rules.number]"
+                  :rules="[(val) => rules.longitudEntre(val, 1, 2), ...rules.number]"
                   :readonly="soloLectura"
                 ></v-text-field>
               </v-col>

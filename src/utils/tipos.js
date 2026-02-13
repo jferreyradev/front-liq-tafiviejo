@@ -231,6 +231,14 @@ export const reparticiones = [
   {
     name: 'MUNICIPALIDAD DE BURRUYACU',
     value: 484
+  },
+  {
+    name: 'MUNICIPALIDAD DE TAFI VIEJO',
+    value: 400
+  },
+  {
+    name: 'HDC TAFI VIEJO',
+    value: 401
   }
 ]
 

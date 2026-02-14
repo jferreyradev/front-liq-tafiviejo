@@ -98,10 +98,10 @@ const error = null
 const lecturaRegistros = ref(true)
 
 async function leerRegistros(filtro = null) {
-  let url = 'en/cargo'
+  let url = 'view/cargo'
   if (filtro !== null) url = url + '?' + filtro + '&sort={"ReparticionId":"asc", "Orden":"asc"}'
   else url = url + '?sort={"ReparticionId":"asc", "Orden":"asc"}'
-
+  console.log(url)
   isPending.value = true
   const { datos, operacionOk } = await leerDatos(url)
   data.value = datos

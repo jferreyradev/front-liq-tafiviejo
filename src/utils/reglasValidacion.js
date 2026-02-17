@@ -47,6 +47,10 @@ export const rules = {
     return 'se aceptan hasta ' + max + ' caracteres'
   },
   longitudEntre: (value, min, max) => {
+    if (value === null) 
+      {let mensaje = 'Se acepta entre ' + min + ' y ' + max + ' caracteres'
+      return mensaje
+      }
     let valorString = value.toString()
 
     if (valorString.length >= min && valorString.length <= max) return true

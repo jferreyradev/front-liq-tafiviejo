@@ -220,7 +220,7 @@ leerRegistros(filtros.getFiltroString())
             <td class="text-left m-0 p-0">
               {{ item.TIPOEMPLEOID }}
             </td>
-            <td class="text-center m-0 p-0">{{ getVto(item.VTOESCALAGON) }}</td>
+            <td class="text-center m-0 p-0">{{ getVto(item.VTOESCALAFON) }}</td>
             <td class="text-right m-0 p-0">{{ item.ANTIGUEDAD }}</td>
             <td class="text-left m-0 p-0">
               {{ getTipoDescripcion(item.SITUACIONREVISTAID, item.SITUACIONREVISTADESCRIPCION) }}

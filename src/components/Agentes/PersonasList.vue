@@ -12,13 +12,13 @@ const props = defineProps(['setPersonaEdicion', 'filtros'])
 const filtros = props.filtros
 
 const hojasHeaders = [
-  { title: '', key: 'ACCIONES' },
-  { title: 'DNI', key: 'DOCUMENTO' },
-  { title: 'Apellido', key: 'APELLIDO' },
-  { title: 'Nombre', key: 'NOMBRE' },
-  { title: 'CUIL', key: 'PERSONACUIL' },
-  { title: 'Fec. Ingreso', key: 'FECHAINGRESO' },
-  { title: 'Cobra Ley', key: 'COBRALEY' }
+  { title: '', key: 'ACCIONES', align: 'center' },
+  { title: 'DNI', key: 'DOCUMENTO', align: 'center' },
+  { title: 'Apellido', key: 'APELLIDO', align: 'center' },
+  { title: 'Nombre', key: 'NOMBRE', align: 'center' },
+  { title: 'CUIL', key: 'PERSONACUIL', align: 'center' },
+  { title: 'Fec. Ingreso', key: 'FECHAINGRESO', align: 'center' },
+  { title: 'Cobra Ley', key: 'COBRALEY', align: 'center' }
 ]
 
 const itemMostrar = ref({

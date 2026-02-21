@@ -96,20 +96,24 @@ async function grabarSP(item, id) {
   }
   console.log('--- registtro a grabar')
   console.log(item)
-  const { datos } = await ejecutarSP(url, item)
-  const valorError = datos.out.vError
-  const valorSalida = datos.out.vSALIDA
-  const errorMsg = datos.out.vErrorMsg
-  if (valorError == 0) {
-    await leerListaRegs()
-    alertMensaje.value = 'Se grabó el rango de parámetros con Id=' + valorSalida
-    alertTipo.value = 'success'
-    mostrarAlert.value = true
-    return true
+  const { datos, errmsg } = await ejecutarSP(url, item)
+  let errorMsg = "No se pudieron grabar los datos"
+  if (datos != null) {
+    const valorError = datos.out.vError
+    const valorSalida = datos.out.vSALIDA
+    errorMsg = datos.out.vErrorMsg
+    if (valorError == 0) {
+      await leerListaRegs()
+      alertMensaje.value = 'Se grabó el rango de parámetros con Id=' + valorSalida
+      alertTipo.value = 'success'
+      mostrarAlert.value = true
+      return 'OK'
+    }
   }
-  console.log('error de grabacion: ' + errorMsg)
+  errorMsg = errmsg
+  console.log('Error de grabacion: ' + errorMsg)
 
-  return false
+  return 'Error de grabacion: ' + errorMsg
 }
 
 async function eliminar(id) {

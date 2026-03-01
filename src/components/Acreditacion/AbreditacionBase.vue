@@ -262,7 +262,7 @@ async function leerListaRegsDetalle() {
       :periodo="periodoLiq"
       :tipoLiquidacion="tipoLiqSel"
       :grupoAdicionalId="grupoAdicionalId"
-      :cantCuotas="cab.CantCuotas"
+      :cantCuotas="cab.CANTCUOTAS"
       @cerrar="cerrarTXTModal"
     />
   </v-dialog>

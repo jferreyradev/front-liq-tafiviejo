@@ -174,6 +174,7 @@ export async function ejecutarSPStream(url = '', data = {}, metodo = 'POST') {
     operacionOk = response.ok    
     if (response.ok) {
       let datosr = await response.json()
+      console.log(datosr)
       console.log(datosr.out.Cursor)
       const fileContent = await datosr.out.Cursor
       console.log(fileContent)

@@ -7,7 +7,7 @@ const props = defineProps(['periodo', 'tipoLiquidacion', 'grupoAdicionalId', 'ca
 const emit = defineEmits(['cerrar'])
 
 let cuotasArray = [{ id: 0, descripcion: 'valor Fijo' }]
-for (let i = 0; i <= props.cantCuotas; i++) {
+for (let i = 0; i < props.cantCuotas; i++) {
   cuotasArray.push({ id: i + 1, descripcion: `Cuota ${i + 1}` })
 }
 
@@ -26,6 +26,7 @@ async function DescargaTXTAcred(filtros) {
   try {
   const { datos, operacionOk, errmsg } = await ejecutarSPStream(url, parametros)
   if (operacionOk && datos) {
+    console.log(datos)
     const urlSalida = window.URL.createObjectURL(datos)
     const a = document.createElement('a')
     a.href = urlSalida

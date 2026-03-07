@@ -96,8 +96,9 @@ async function grabarSP(item, id) {
   }
   console.log('--- registtro a grabar')
   console.log(item)
-  const { datos, errmsg } = await ejecutarSP(url, item)
+  const { datos } = await ejecutarSP(url, item)
   let errorMsg = "No se pudieron grabar los datos"
+
   if (datos != null) {
     const valorError = datos.out.vError
     const valorSalida = datos.out.vSALIDA
@@ -110,8 +111,6 @@ async function grabarSP(item, id) {
       return 'OK'
     }
   }
-  errorMsg = errmsg
-  console.log('Error de grabacion: ' + errorMsg)
 
   return 'Error de grabacion: ' + errorMsg
 }

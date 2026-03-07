@@ -6,7 +6,7 @@ import AcreditacionBase from '@/components/Acreditacion/AbreditacionBase.vue'
 <template>
   <v-container>
     <v-row justify="space-around" class="bg-primary">
-      <h3>Acreditaciones</h3>
+      <h3>Genera Acreditaciones</h3>
     </v-row>
     <v-row>
       <AcreditacionBase></AcreditacionBase>

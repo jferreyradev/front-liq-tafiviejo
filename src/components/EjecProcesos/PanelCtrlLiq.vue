@@ -163,6 +163,9 @@ async function Transformar() {
   if (salida !== 0) {
     resultado = -1
     mensaje = 'No se pudo enviar a transformar'
+  } else {
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    verProcesos()
   }
 
   return { resultado: resultado, mensaje: mensaje }
@@ -206,6 +209,10 @@ async function Liquidar() {
   if (salida !== 0) {
     resultado = -1
     mensaje = 'No se pudo enviar a liquidar'
+  } else {
+    
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    verProcesos()
   }
 
   return { resultado: resultado, mensaje: mensaje }

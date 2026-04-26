@@ -1,11 +1,14 @@
 import { useEndPoints } from '@/composables/useEndPoints'
 
-const { apiBase, apiSp } = useEndPoints()
+const { apiBase, apiSp, apiTunel } = useEndPoints()
 
 //const urlAPI = 'http://www.serverburru2.duckdns.org:3005/api/'
 //const urlAPI_sp = 'https://josrferreyr-deno-api-su-79.deno.dev/'
 const urlAPI_sp = apiSp.value + '/'
 const urlAPI = apiBase.value + '/api/'
+const urlTunel = apiTunel.value + '/'
+
+
 
 export async function grabarRegistro(url = '', data = {}, metodo = 'POST') {
   let estado = 0
@@ -165,4 +168,40 @@ export async function descargaTXT(url) {
   const datos = await response.blob()
   const urlSalida = window.URL.createObjectURL(datos)
   return urlSalida
+}
+
+export async function leerDatos_Tunel( body) {
+  let estado = 0
+  let operacionOk = false
+  let errmsg = ''
+  let datos = null
+  console.log(urlTunel)
+  let response = null
+  try {
+    response = await fetch(urlTunel + 'query', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer desarrollotoken'
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify(body) // body data type must match "Content-Type" header
+  })
+    estado = response.status
+    if (response.ok) {
+
+      datos = await response.json()
+      operacionOk = true
+    } else if (response.status == 404 || response.status == 500) {
+      datos = null
+      operacionOk = false
+    }
+  } catch (error) {
+    estado = 999
+    operacionOk = false
+    errmsg = 'Error en la Red'
+    datos = null
+    console.log(error)
+  }
+  return { estado, operacionOk, errmsg, datos }
 }

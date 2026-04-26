@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import Confirmacion from './Confirmacion.vue'
-import { leerDatos, ejecutarSP } from './llamadaAPI'
+import { leerDatos, ejecutarSP, leerDatos_Tunel } from './llamadaAPI'
 import botonTooltip from './botonTooltip.vue'
 import { getVto, financial } from '@/utils/formatos'
 import ParametrosDDJJ_Vista from './ParametrosDDJJ_Vista.vue'
@@ -204,6 +204,16 @@ function exportFile() {
 }
 
 // --- fin de funciones de exportacion
+
+
+async function probarLecturaTunel() {
+  const salida = await leerDatos_Tunel(
+    {"query": "SELECT * from personas where rownum < 10"}
+  )
+  console.log(salida)
+
+}
+
 </script>
 
 <style>
@@ -221,6 +231,7 @@ function exportFile() {
       <p>
         <b>Parámetros de DDJJ 931</b>
       </p>
+      <v-btn color="primary" @click="probarLecturaTunel" :disabled="!data">probar</v-btn>
     </v-row>
   </v-container>
   <v-container>

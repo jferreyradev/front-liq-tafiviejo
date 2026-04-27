@@ -208,7 +208,7 @@ function exportFile() {
 
 async function probarLecturaTunel() {
   const salida = await leerDatos_Tunel(
-    {"query": "SELECT * from personas where rownum < 10"}
+    {"query2": "SELECT * from personas where rownum < 10"}
   )
   console.log(salida)
 

@@ -192,8 +192,22 @@ export async function leerDatos_Tunel( body) {
 
       datos = await response.json()
       operacionOk = true
-    } else if (response.status == 404 || response.status == 500) {
+    } else if (response.status == 400) {
       datos = null
+      operacionOk = false
+      errmsg = 'cuerpo o parámetros incorrectos'
+    } else if (response.status == 404) {
+      datos = null
+      operacionOk = false
+      errmsg = 'Error 404, recurso no encontrado'
+    }
+    else if (response.status == 500) {
+      try {
+          datos = await response.json()
+          errmsg = datos.error
+      } catch (error) {
+          errmsg = 'Error interno del servidor'
+      }
       operacionOk = false
     }
   } catch (error) {

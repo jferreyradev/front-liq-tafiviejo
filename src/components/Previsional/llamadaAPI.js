@@ -1,13 +1,11 @@
 import { useEndPoints } from '@/composables/useEndPoints'
 
-const { apiBase, apiSp, apiTunel } = useEndPoints()
+const { apiBase, apiSp} = useEndPoints()
 
 //const urlAPI = 'http://www.serverburru2.duckdns.org:3005/api/'
 //const urlAPI_sp = 'https://josrferreyr-deno-api-su-79.deno.dev/'
 const urlAPI_sp = apiSp.value + '/'
 const urlAPI = apiBase.value + '/api/'
-const urlTunel = apiTunel.value + '/'
-
 
 
 export async function grabarRegistro(url = '', data = {}, metodo = 'POST') {
@@ -170,52 +168,3 @@ export async function descargaTXT(url) {
   return urlSalida
 }
 
-export async function leerDatos_Tunel( body) {
-  let estado = 0
-  let operacionOk = false
-  let errmsg = ''
-  let datos = null
-  console.log(urlTunel)
-  let response = null
-  try {
-    response = await fetch(urlTunel + 'query', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer desarrollotoken'
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: JSON.stringify(body) // body data type must match "Content-Type" header
-  })
-    estado = response.status
-    if (response.ok) {
-
-      datos = await response.json()
-      operacionOk = true
-    } else if (response.status == 400) {
-      datos = null
-      operacionOk = false
-      errmsg = 'cuerpo o parámetros incorrectos'
-    } else if (response.status == 404) {
-      datos = null
-      operacionOk = false
-      errmsg = 'Error 404, recurso no encontrado'
-    }
-    else if (response.status == 500) {
-      try {
-          datos = await response.json()
-          errmsg = datos.error
-      } catch (error) {
-          errmsg = 'Error interno del servidor'
-      }
-      operacionOk = false
-    }
-  } catch (error) {
-    estado = 999
-    operacionOk = false
-    errmsg = 'Error en la Red'
-    datos = null
-    console.log(error)
-  }
-  return { estado, operacionOk, errmsg, datos }
-}

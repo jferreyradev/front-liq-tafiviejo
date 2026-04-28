@@ -1,7 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 import Confirmacion from './Confirmacion.vue'
-import { leerDatos, ejecutarSP, leerDatos_Tunel } from './llamadaAPI'
+import { leerDatos, ejecutarSP} from './llamadaAPI'
+import { leerDatos_Tunel, generaLlamadaFuncion } from '@/utils/API_Tunel.js'
 import botonTooltip from './botonTooltip.vue'
 import { getVto, financial } from '@/utils/formatos'
 import ParametrosDDJJ_Vista from './ParametrosDDJJ_Vista.vue'
@@ -208,9 +209,27 @@ function exportFile() {
 
 async function probarLecturaTunel() {
   const salida = await leerDatos_Tunel(
-    {"query2": "SELECT * from personas where rownum < 10"}
+    {"query": "SELECT * from personas where rownum < 10"}
   )
   console.log(salida)
+
+ // 1. Procedimiento Normal
+const datosProc = [
+    ["vIDPERS", "IN", 123, "NUMBER"],
+    ["vDNI", "IN", 45678901, "NUMBER"],
+    ["vErrorMsg", "OUT", null, "STRING"]
+];
+
+// 2. Función (debería insertar 'result' antes de 'vSALIDA')
+const datosFunc = [
+    ["vIDPERS", "IN", 123, "NUMBER"],
+    ["vSALIDA", "OUT", null, "NUMBER"],
+   /// ["vError", "OUT", null, "NUMBER"]
+    ["vError", "OUT"]
+];
+
+console.log("PROCEDIMIENTO:", JSON.stringify(generaLlamadaFuncion("pkg_prueba.prueba1", 'PROCEDURE', datosProc), null, 2));
+console.log("FUNCIÓN:", JSON.stringify(generaLlamadaFuncion("pkg_prueba.prueba2", 'FUNCTION', datosFunc   ), null, 2)); 
 
 }
 

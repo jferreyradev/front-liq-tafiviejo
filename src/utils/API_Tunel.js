@@ -1,11 +1,10 @@
 import { useEndPoints } from '@/composables/useEndPoints'
 
-const {  apiTunel } = useEndPoints()
-
+const { apiTunel } = useEndPoints()
 
 const urlTunel = apiTunel.value + '/'
 
-export async function leerDatos_Tunel( body) {
+export async function leerDatos_Tunel(body) {
   let estado = 0
   let operacionOk = false
   let errmsg = ''
@@ -14,17 +13,16 @@ export async function leerDatos_Tunel( body) {
   let response = null
   try {
     response = await fetch(urlTunel + 'query', {
-    method: 'POST',
-    headers: {
+      method: 'POST',
+      headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer desarrollotoken'
+        Authorization: 'Bearer desarrollotoken'
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: JSON.stringify(body) // body data type must match "Content-Type" header
-  })
+    })
     estado = response.status
     if (response.ok) {
-
       datos = await response.json()
       operacionOk = true
     } else if (response.status == 400) {
@@ -35,13 +33,12 @@ export async function leerDatos_Tunel( body) {
       datos = null
       operacionOk = false
       errmsg = 'Error 404, recurso no encontrado'
-    }
-    else if (response.status == 500) {
+    } else if (response.status == 500) {
       try {
-          datos = await response.json()
-          errmsg = datos.error
+        datos = await response.json()
+        errmsg = datos.error
       } catch (error) {
-          errmsg = 'Error interno del servidor'
+        errmsg = 'Error interno del servidor'
       }
       operacionOk = false
     }
@@ -55,25 +52,28 @@ export async function leerDatos_Tunel( body) {
   return { estado, operacionOk, errmsg, datos }
 }
 
-export async function EjecutarSP_Tunel( body) {
+export async function ejecutarSP_Tunel(body) {
   let estado = 0
   let operacionOk = false
   let errmsg = ''
-  console.log(urlTunel)
   let response = null
+  let datos = null
   try {
     response = await fetch(urlTunel + 'procedure', {
-    method: 'POST',
-    headers: {
+      method: 'POST',
+      //mode: 'cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer desarrollotoken'
+        Authorization: 'Bearer desarrollotoken'
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
       body: JSON.stringify(body) // body data type must match "Content-Type" header
-  })
+    })
     estado = response.status
     if (response.ok) {
-
       datos = await response.json()
       operacionOk = true
     } else if (response.status == 400) {
@@ -84,13 +84,12 @@ export async function EjecutarSP_Tunel( body) {
       datos = null
       operacionOk = false
       errmsg = 'Error 404, recurso no encontrado'
-    }
-    else if (response.status == 500) {
+    } else if (response.status == 500) {
       try {
-          datos = await response.json()
-          errmsg = datos.error
+        datos = await response.json()
+        errmsg = datos.error
       } catch (error) {
-          errmsg = 'Error interno del servidor'
+        errmsg = 'Error interno del servidor'
       }
       operacionOk = false
     }
@@ -102,45 +101,6 @@ export async function EjecutarSP_Tunel( body) {
     console.log(error)
   }
   return { estado, operacionOk, errmsg, datos }
-}
-
-/**
- * Genera el objeto de parámetros a partir de una matriz.
- * @param {Array[]} matrix - Array de arrays: [nombre, dirección, valor, tipo]
- * @param {string} mode - 'FUNCTION' o 'PROCEDURE'
- */
-export function buildParams(matrix, mode) {
-    const isFunction = mode?.toUpperCase() === 'FUNCTION';
-    
-    // Mapeamos la matriz a objetos con nombre de propiedad fijo
-    let params = matrix.map(row => {
-        const [name, direction, value, type] = row;
-        const obj = { name };
-        
-        // Solo agregamos las propiedades si existen en la fila
-        if (direction !== undefined) obj.direction = direction;
-        if (value !== undefined) obj.value = value;
-        if (type !== undefined) obj.type = type;
-        
-        return obj;
-    });
-
-    if (isFunction) {
-        // Buscamos si ya existe algún parámetro con dirección "OUT"
-        const firstOutIndex = params.findIndex(p => p.direction === 'OUT');
-        
-        // Si no hay ningún OUT, lo agregamos al final. 
-        // Si hay, lo insertamos justo antes del primero.
-        const resultParam = { name: "result", direction: "OUT", type: "NUMBER" };
-        
-        if (firstOutIndex === -1) {
-            params.push(resultParam);
-        } else {
-            params.splice(firstOutIndex, 0, resultParam);
-        }
-    }
-
-    return { params };
 }
 
 /**
@@ -149,22 +109,28 @@ export function buildParams(matrix, mode) {
  * @param {string} mode - 'FUNCTION' o 'PROCEDURE'.
  * @param {Array[]} matrix - Matriz de parámetros [nombre, dirección, valor, tipo].
  */
-export
-function generaLlamadaFuncion(fullName, mode, matrix) {
-  const isFunction = mode?.toUpperCase() === 'FUNCTION';
+export function generaLlamadaFuncion(fullName, mode, matrix) {
+  const isFunction = mode?.toUpperCase() === 'FUNCTION'
 
   // 1. Mapeamos la matriz a objetos dinámicos
-  let params = matrix.map(row => {
-    const [name, direction, value, type] = row;
-    const obj = { name };
+  let params = matrix.map((row) => {
+    const [name, direction, value, type] = row
+    const obj = { name }
 
-    if (direction !== undefined) obj.direction = direction;
-    if (value !== undefined) obj.value = value;
-    if (type !== undefined) obj.type = type;
+    if (direction !== undefined) obj.direction = direction
+    else obj.direction = 'IN'
+    if (value !== undefined) obj.value = value
+    else {
+      if (obj.direction === 'IN') {
+        obj.value = type === 'NUMBER' ? 0 : null
+      }
+    }
+    if (type !== undefined) obj.type = type
 
-    return obj;
-  });
+    return obj
+  })
 
+  /*
   // 2. Lógica específica para Funciones
   if (isFunction) {
     // Verificamos si ya existe un parámetro llamado 'result'
@@ -180,12 +146,13 @@ function generaLlamadaFuncion(fullName, mode, matrix) {
         params.splice(firstOutIndex, 0, resultParam);
       }
     }
+      
   }
-
+*/
   // 3. Retornamos la estructura final
   return {
     name: fullName,
     isFunction: isFunction,
     params: params
-  };
+  }
 }

@@ -1,6 +1,6 @@
 import { useEndPoints } from '@/composables/useEndPoints'
 
-const { apiTunel } = useEndPoints()
+const { apiTunel, api_token } = useEndPoints()
 
 const urlTunel = apiTunel.value + '/'
 
@@ -11,16 +11,28 @@ export async function leerDatos_Tunel(body) {
   let datos = null
   console.log(urlTunel)
   let response = null
-  try {
-    response = await fetch(urlTunel + 'query', {
+
+  let contenido_llamada = {
       method: 'POST',
+      mode: 'no-cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: 'same-origin', // include, *same-origin, omit
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer desarrollotoken'
-        // 'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Bearer ${api_token.value}`
+        
       },
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer',
       body: JSON.stringify(body) // body data type must match "Content-Type" header
-    })
+    }
+  
+    console.log('---------------------')
+    console.log(contenido_llamada)
+    console.log('---------------------')
+
+  try {
+    response = await fetch(urlTunel + 'query', )
     estado = response.status
     if (response.ok) {
       datos = await response.json()
@@ -58,6 +70,27 @@ export async function ejecutarSP_Tunel(body) {
   let errmsg = ''
   let response = null
   let datos = null
+
+  const Pasado =  {
+      method: 'POST',
+      //mode: 'cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${api_token.value}`
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(body) // body data type must match "Content-Type" header
+    };
+
+  console.log('---------------------')
+  //console.log(JSON.stringify(Pasado, null, 2));
+  console.info(Pasado);
+  console.log('---------------------')
+  
+
   try {
     response = await fetch(urlTunel + 'procedure', {
       method: 'POST',
@@ -65,7 +98,7 @@ export async function ejecutarSP_Tunel(body) {
       cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer desarrollotoken'
+        Authorization: `Bearer ${api_token.value}`
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       redirect: 'follow', // manual, *follow, error

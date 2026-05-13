@@ -208,11 +208,11 @@ function exportFile() {
 
 
 async function probarLecturaTunel() {
-  const salida = await leerDatos_Tunel(
-    {"query": "SELECT * from personas where rownum < 10"}
-  )
-  console.log(salida)
-/*
+  //const salida = await leerDatos_Tunel(
+  //  {"query": "SELECT * from personas where rownum < 10"}
+  //)
+  //console.log(salida)
+
  // 1. Procedimiento Normal
 const datosProc = [
     ["vIDPERS", "IN", 123, "NUMBER" ],
@@ -243,7 +243,7 @@ console.log("FUNCIÓN:", JSON.stringify(generaLlamadaFuncion("pkg_tmp_pruebas.pr
   const salida3 = await ejecutarSP_Tunel(cuerpo);
   console.log(salida3);
   if (salida3.operacionOk == true) console.log("FUNCIÓN ejecutada correctamente. SALIDA:", salida3.datos.out);
-*/
+
   }
 
 </script>

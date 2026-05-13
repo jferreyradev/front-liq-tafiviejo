@@ -14,16 +14,11 @@ export async function leerDatos_Tunel(body) {
 
   let contenido_llamada = {
       method: 'POST',
-      mode: 'no-cors', // no-cors, *cors, same-origin
-      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: 'same-origin', // include, *same-origin, omit
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${api_token.value}`
         
       },
-      redirect: 'follow', // manual, *follow, error
-      referrerPolicy: 'no-referrer',
       body: JSON.stringify(body) // body data type must match "Content-Type" header
     }
   
@@ -32,7 +27,7 @@ export async function leerDatos_Tunel(body) {
     console.log('---------------------')
 
   try {
-    response = await fetch(urlTunel + 'query', )
+    response = await fetch(urlTunel + 'query', contenido_llamada )
     estado = response.status
     if (response.ok) {
       datos = await response.json()
@@ -71,40 +66,18 @@ export async function ejecutarSP_Tunel(body) {
   let response = null
   let datos = null
 
-  const Pasado =  {
+  const contenido_llamada =  {
       method: 'POST',
-      //mode: 'cors', // no-cors, *cors, same-origin
-      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${api_token.value}`
-        // 'Content-Type': 'application/x-www-form-urlencoded',
       },
-      redirect: 'follow', // manual, *follow, error
-      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
       body: JSON.stringify(body) // body data type must match "Content-Type" header
     };
-
-  console.log('---------------------')
-  //console.log(JSON.stringify(Pasado, null, 2));
-  console.info(Pasado);
-  console.log('---------------------')
   
 
   try {
-    response = await fetch(urlTunel + 'procedure', {
-      method: 'POST',
-      //mode: 'cors', // no-cors, *cors, same-origin
-      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${api_token.value}`
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      redirect: 'follow', // manual, *follow, error
-      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(body) // body data type must match "Content-Type" header
-    })
+    response = await fetch(urlTunel + 'procedure', contenido_llamada)
     estado = response.status
     if (response.ok) {
       datos = await response.json()

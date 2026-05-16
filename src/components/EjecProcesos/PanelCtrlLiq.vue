@@ -6,6 +6,7 @@ import { rules } from '@/utils/reglasValidacion'
 import { leerDatos, ejecutarSP_SinEspera } from './llamadaAPI'
 import ProcesosList from './ProcesosList.vue'
 
+
 // tipos
 const tiposProceso = [
   { name: 'Transformar', value: 1 },

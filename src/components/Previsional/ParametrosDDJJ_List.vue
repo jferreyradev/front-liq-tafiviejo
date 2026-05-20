@@ -1,7 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 import Confirmacion from './Confirmacion.vue'
-import { leerDatos, ejecutarSP } from './llamadaAPI'
+import { leerDatos, ejecutarSP} from './llamadaAPI'
+import { leerDatos_Tunel, ejecutarSP_Tunel, generaLlamadaFuncion } from '@/utils/API_Tunel.js'
 import botonTooltip from './botonTooltip.vue'
 import { getVto, financial } from '@/utils/formatos'
 import ParametrosDDJJ_Vista from './ParametrosDDJJ_Vista.vue'
@@ -97,19 +98,22 @@ async function grabarSP(item, id) {
   console.log('--- registtro a grabar')
   console.log(item)
   const { datos } = await ejecutarSP(url, item)
-  const valorError = datos.out.vError
-  const valorSalida = datos.out.vSALIDA
-  const errorMsg = datos.out.vErrorMsg
-  if (valorError == 0) {
-    await leerListaRegs()
-    alertMensaje.value = 'Se grabó el rango de parámetros con Id=' + valorSalida
-    alertTipo.value = 'success'
-    mostrarAlert.value = true
-    return true
-  }
-  console.log('error de grabacion: ' + errorMsg)
+  let errorMsg = "No se pudieron grabar los datos"
 
-  return false
+  if (datos != null) {
+    const valorError = datos.out.vError
+    const valorSalida = datos.out.vSALIDA
+    errorMsg = datos.out.vErrorMsg
+    if (valorError == 0) {
+      await leerListaRegs()
+      alertMensaje.value = 'Se grabó el rango de parámetros con Id=' + valorSalida
+      alertTipo.value = 'success'
+      mostrarAlert.value = true
+      return 'OK'
+    }
+  }
+
+  return 'Error de grabacion: ' + errorMsg
 }
 
 async function eliminar(id) {
@@ -201,6 +205,47 @@ function exportFile() {
 }
 
 // --- fin de funciones de exportacion
+
+
+async function probarLecturaTunel() {
+  //const salida = await leerDatos_Tunel(
+  //  {"query": "SELECT * from personas where rownum < 10"}
+  //)
+  //console.log(salida)
+
+ // 1. Procedimiento Normal
+const datosProc = [
+    ["vIDPERS", "IN", 123, "NUMBER" ],
+    ["vDNI", "IN", 45678901, "NUMBER"],
+    ["vSALIDA", "OUT", null, "NUMBER"],
+    ["vError", "OUT", null, "NUMBER"],
+    ["vErrorMsg", "OUT", null, "STRING"]
+];
+
+// 2. Función (debería insertar 'result' antes de 'vSALIDA')
+const datosFunc = [
+    ["vIDPERS", "IN", 123, "NUMBER"],
+    ["vDNI", "IN", 45678901, "NUMBER"],
+    ["vSALIDA", "OUT", null, "NUMBER"],
+    ["vError", "OUT", null, "NUMBER"],
+    ["vErrorMsg", "OUT", null, "STRING"]
+];
+
+console.log("PROCEDIMIENTO:", JSON.stringify(generaLlamadaFuncion("pkg_tmp_pruebas.prueba1", 'PROCEDURE', datosProc), null, 2));
+console.log("FUNCIÓN:", JSON.stringify(generaLlamadaFuncion("pkg_tmp_pruebas.prueba_fn1", 'FUNCTION', datosFunc   ), null, 2)); 
+
+  let cuerpo = generaLlamadaFuncion("pkg_tmp_pruebas.prueba1", 'PROCEDURE', datosProc);
+  const salida2 = await ejecutarSP_Tunel(cuerpo);
+  console.log(salida2);
+  if (salida2.operacionOk == true) console.log("PROCEDIMIENTO ejecutado correctamente. SALIDA:", salida2.datos.out);
+  
+  cuerpo = generaLlamadaFuncion("pkg_tmp_pruebas.prueba_fn1", 'FUNCTION', datosFunc);
+  const salida3 = await ejecutarSP_Tunel(cuerpo);
+  console.log(salida3);
+  if (salida3.operacionOk == true) console.log("FUNCIÓN ejecutada correctamente. SALIDA:", salida3.datos.out);
+
+  }
+
 </script>
 
 <style>
@@ -218,6 +263,7 @@ function exportFile() {
       <p>
         <b>Parámetros de DDJJ 931</b>
       </p>
+      <v-btn color="primary" @click="probarLecturaTunel" :disabled="!data">probar</v-btn>
     </v-row>
   </v-container>
   <v-container>

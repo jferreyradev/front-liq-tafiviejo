@@ -93,13 +93,49 @@ const router = createRouter({
       component: () => import('../views/ArchivosView.vue')
     },
     {
-      path: '/acred',
-      name: 'acreditaciones',
+      path: '/agentes',
+      name: 'agentes',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AcreditacionesView.vue')
+      component: () => import('../views/AgentesView.vue')
+    },
+    {
+      path: '/cargos',
+      name: 'cargos',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/CargosView.vue')
+    },
+    {
+      path: '/procesos',
+      name: 'procesos',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/ProcesosView.vue')
+    },
+    {
+      path: '/acred',
+      name: 'acred',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      // component: () => import('../views/ProcesosView.vue')
+       component: () => import('../views/AcreditacionView.vue')
+    },
+        {
+      path: '/acredita',
+      name: 'acredita',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      // component: () => import('../views/ProcesosView.vue')
+       component: () => import('../views/AcreditacionesView.vue')
     }
+
+
   ]
 })
 

@@ -56,3 +56,21 @@ export const getFechaToAPIFromDDMMYYYY = (fechaOrigen) => {
   let fecha = d[2] + '-' + d[1] + '-' + d[0] + 'T03:00:00.000Z'
   return fecha
 }
+
+export const getTipoDescripcion = (id, descripcion, forma = 1) => {
+  if (forma === 1) return '(' + id + ') ' + descripcion
+  if (forma === 2) return id + ' - ' + descripcion
+  return id
+}
+
+export const getDecimalToAPI = (valor) => {
+  let nuevoValor = valor
+  if (valor !== null) {
+    if (typeof valor === 'string') {
+      let valorFormateado = valor.replace(',', '.')
+      nuevoValor = Number(valorFormateado)
+    }
+  }
+
+  return nuevoValor
+}

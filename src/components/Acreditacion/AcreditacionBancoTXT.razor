@@ -1,0 +1,196 @@
+﻿@page "/AcreditacionBancoTXT/periodo/tipoLiquidacion/grupoAdicionalId/cantCuotas"
+@inject IToastService _toastService
+@inject IAcreditacionService AcreditacionService
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject IModalService _modalServices
+@inject IJSRuntime JSRuntime
+@inject HttpClient Http
+@using sueldos.blazor.Report
+@using System.Text;
+
+<div class="card">
+    @if (!string.IsNullOrEmpty(errMensaje))
+    {
+        <div class="card-header bg-warning">
+            Error: @errMensaje
+        </div>
+
+    }
+    <div class="card-body">
+        <div class="row">
+            <b>Período:</b> <em>@periodo.ToString("MM/yyyy")</em>
+            <hr />
+        </div>
+        <div class="row">
+            <b>Tipo de Liquidación:</b> <em>@tipoLiduidacionDesc</em>
+            <hr />
+        </div>
+        <div class="row">
+            <b>Grupo Adicional:</b> <em>@grupoAdicionalId</em>
+        </div>
+        <hr />
+        <div class="row">
+            <em>Seleccione Cuota o valor fijo</em>
+            <select name="select" class="form-control" @bind="cuota">
+                @for (int i = 0; i <= cantCuotas; i++)
+                {
+                    if (i == 0)
+                    {
+                        <option value="@i">Valor Fijo</option>
+                    }
+                    else
+                    {
+                        <option value="@i">Cuota @i</option>
+                    }
+                }
+            </select>
+        </div>
+        <hr />
+        <div class="row">
+            <input type="button" class="btn bg-success" value="Generar" @onclick="GeneraTXT" />
+            <input type="button" class="btn bg-info" value="Cancelar" @onclick="Cancelar" />
+        </div>
+    </div>
+
+</div>
+
+
+@code {
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
+
+    [Parameter]
+    public DateTime periodo { get; set; }
+
+    [Parameter]
+    public TipoLiquidacion tipoLiquidacion { get; set; }
+
+    [Parameter]
+    public short grupoAdicionalId { get; set; }
+
+    [Parameter]
+    public short cantCuotas { get; set; }
+
+    public short cuota = 0;
+    public AcredBancoFilters filtros = new AcredBancoFilters();
+
+
+    string tipoLiduidacionDesc;
+    string errMensaje;
+
+    protected override async Task OnInitializedAsync()
+    {
+        tipoLiduidacionDesc = tipoLiquidacion.Id.ToString() + " - " + tipoLiquidacion.Descripcion;
+    }
+
+
+    protected async Task Cancelar()
+    {
+        //_navigationManager.NavigateTo($"/ConceptoLiquidacionList/{_cargoId}");
+        await ModalInstance.Cancel();
+    }
+
+    protected async Task GeneraTXT()
+    {
+        errMensaje = "";
+        filtros.periodo = periodo;
+        filtros.tipoLiquidacionId = tipoLiquidacion.Id;
+        filtros.grupoAdicionalId = grupoAdicionalId;
+        filtros.cuota = cuota;
+        filtros.cantCuotas = cantCuotas;
+
+        string archivo = periodo.ToString("yyyyMM") + tipoLiquidacion.Descripcion.Substring(0, 3) +
+            "_G" + grupoAdicionalId + "_C" + cuota;
+
+        IList<double> valores = await AcreditacionService.TotalArchivoBanco(filtros);
+        int cant = 0;
+        double tot = 0;
+        if (valores.Count() > 0)
+        {
+            cant = Convert.ToInt32(valores.ElementAt(0));
+            tot = valores.ElementAt(1);
+        } else
+        {
+            errMensaje = "Falló el cálculo de totales";
+            return;
+        }
+
+
+
+
+        HttpResponseMessage respuesta = await AcreditacionService.GetContenidoTXT(filtros);
+        if (respuesta.IsSuccessStatusCode)
+        {
+            string resultado = respuesta.Content.ReadAsStringAsync().Result;
+
+            if (resultado.Length > 0)
+            {
+                await JSRuntime.InvokeAsync<object>("saveAsFile", archivo, resultado, "TXT");
+
+                RptResumenAcreditacion reporte = new RptResumenAcreditacion();
+                reporte.GeneratePDF(JSRuntime, periodo.ToString("MM/yyyy"),
+                    tipoLiduidacionDesc, grupoAdicionalId, cuota, cant, tot, archivo+".txt");
+
+                await ModalInstance.Close();
+            }
+            else
+                errMensaje = "No hay datos a exportar";
+
+            //   await JSRuntime.InvokeVoidAsync("open", new object[2] { resultado, "_self" });
+
+        }
+        else
+        {
+            errMensaje = respuesta.ReasonPhrase;
+        }
+
+    }
+}
+
+
+       public async Task<HttpResponseMessage> GetContenidoTXT(AcredBancoFilters filtros)
+        {
+
+            string url = _httpclient.BaseAddress.ToString() + "api/txtfromsp/cursorArchivoBco";
+            int cuota;
+            if (filtros.cuota == 0)
+                cuota = 0;
+            else if ((filtros.cuota < filtros.cantCuotas) || (filtros.cantCuotas==1))
+                cuota = 1;
+            else
+                cuota = 2;
+
+
+            string param = "{" + '"' + "Periodo" + '"' + ":" + '"' + filtros.periodo.ToString("dd/MM/yyyy") + '"' + "," +
+'"' + "TipoLiq" + '"' + ":" + filtros.tipoLiquidacionId.ToString() + "," +
+'"' + "GrupoAdicional" + '"' + ":" + filtros.grupoAdicionalId.ToString() + "," +
+'"' + "Cuotas" + '"' + ":" + cuota +
+"}";
+            var paramJSON = new StringContent(param, Encoding.UTF8, "application/json");
+
+            try
+            {
+                HttpResponseMessage responseM = new HttpResponseMessage();
+                var response = await _httpclient.PostAsync(url, paramJSON);
+                var resultado = response.Content.ReadAsStringAsync().Result;
+                if (!response.IsSuccessStatusCode)
+                {
+                    responseM.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                    responseM.ReasonPhrase = "Error al invocar el proceso de generación de archivo - " + response.ReasonPhrase;
+                    return responseM;
+                }
+                return response;
+            }
+            catch (Exception e)
+            {
+                HttpResponseMessage response = new HttpResponseMessage();
+                response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                var frase = "No se pudo genera el archivo";
+                response.ReasonPhrase = frase + " - " + e.Message;
+                return response;
+            }
+
+
+
+
+
+        }

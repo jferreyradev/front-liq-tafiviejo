@@ -67,9 +67,10 @@ const itemMostrar = ref({
 })
 
 function handleModif(itemid) {
+  
   mostrarAlert.value = false
   let item = null
-  if (itemid !== 0) item = data.value.find((e) => e.ID == itemid)
+  if (itemid !== 0 && itemid !== null) item = data.value.find((e) => e.ID == itemid)
   abrirModal(item)
 }
 

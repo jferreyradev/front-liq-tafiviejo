@@ -4,6 +4,7 @@ import { rules } from '@/utils/reglasValidacion'
 import LiquidacionesDDJJ from './LiquidacionesDDJJ.vue'
 import DDJJResumenDJ from './DDJJResumenDJ.vue'
 
+
 const periodoActivoLeyenda = ref('Sin definir')
 const periodo = ref(null)
 const periodoActivo = ref(null)
@@ -18,6 +19,7 @@ function definirPeriodoActivo(nuevoPeriodo) {
     periodoActivo.value = nuevoPeriodo
   }
 }
+
 </script>
 
 <template>

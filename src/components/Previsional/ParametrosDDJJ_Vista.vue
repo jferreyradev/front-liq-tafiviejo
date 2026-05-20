@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { getVto, getVtoActual, getFechaToAPIFromMMYYYY } from '@/utils/formatos'
+import { getVto, getVtoActual, getFechaToAPIFromMMYYYY, getDecimalToAPI } from '@/utils/formatos'
 import { rules } from '@/utils/reglasValidacion'
 
 const props = defineProps(['Registro', 'cerrar', 'funcion'])
@@ -60,15 +60,15 @@ async function grabaRegistro() {
   let registroGrabar = {
     vPERIODO: getFechaToAPIFromMMYYYY(periodo.value),
     vPERIODO_HASTA: vto,
-    vAPJUB_MIN: registroActual.value.JUBMIN,
-    vAPJUB_MAX: registroActual.value.JUBMAX,
-    vAPJUB_PORC: registroActual.value.PORCREP,
-    vCONTJUB_MAX: registroActual.value.CONTJUBMAX,
-    vCONTJUB_PORC: registroActual.value.CONTJUBPORC,
-    vAPOS_MIN: registroActual.value.APOSMIN,
-    vAPOS_MAX: registroActual.value.APOSMAX,
-    vCONTOS_MIN: registroActual.value.CONTOSMIN,
-    vCONTOS_MAX: registroActual.value.CONTOSMAX
+    vAPJUB_MIN: getDecimalToAPI(registroActual.value.JUBMIN),
+    vAPJUB_MAX: getDecimalToAPI(registroActual.value.JUBMAX),
+    vAPJUB_PORC: getDecimalToAPI(registroActual.value.PORCREP),
+    vCONTJUB_MAX: getDecimalToAPI(registroActual.value.CONTJUBMAX),
+    vCONTJUB_PORC: getDecimalToAPI(registroActual.value.CONTJUBPORC),
+    vAPOS_MIN: getDecimalToAPI(registroActual.value.APOSMIN),
+    vAPOS_MAX: getDecimalToAPI(registroActual.value.APOSMAX),
+    vCONTOS_MIN: getDecimalToAPI(registroActual.value.CONTOSMIN),
+    vCONTOS_MAX: getDecimalToAPI(registroActual.value.CONTOSMAX)
   }
   if (registroActual.value.ID !== 0) {
     registroGrabar = {
@@ -77,12 +77,12 @@ async function grabaRegistro() {
     }
   }
   console.log(registroGrabar)
-  let grabarOk = await props.funcion(registroGrabar, registroActual.value.ID)
+  let resultgrabar = await props.funcion(registroGrabar, registroActual.value.ID)
 
-  if (grabarOk) {
+  if (resultgrabar=== 'OK') {
     props.cerrar()
   } else {
-    mensajeError.value = 'No se pudieron grabar los datos'
+    mensajeError.value = resultgrabar
     mostrarAlert.value = true
   }
 }
@@ -186,7 +186,7 @@ function validarRegistro() {
                 <v-text-field
                   v-model="registroActual.APOSMAX"
                   hide-details="auto"
-                  label="Ap. Jub. Máx."
+                  label="Ap. OS. Máx."
                   :rules="[...rules.numDecimal, (val) => rules.longitudMin(val, 1)]"
                 ></v-text-field>
               </v-col>

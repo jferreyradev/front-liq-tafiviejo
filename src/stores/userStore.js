@@ -64,7 +64,7 @@ export const useUserStore = defineStore('userStore', {
               }
               const requestOptions = {
                 method: `POST`, // POST, etc
-                mode: 'no-cors',
+                mode: 'cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(bodyIn)
               }
@@ -269,7 +269,7 @@ export const useUserStore = defineStore('userStore', {
             try {
                 const requestOptions = {
                     method: `POST`, // POST, etc
-                    mode: 'no-cors',
+                    mode: 'cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(bodyIn)
                 }
@@ -294,7 +294,7 @@ export const useUserStore = defineStore('userStore', {
                 }
                 const requestOptions = {
                     method: `POST`, // POST, etc
-                    mode: 'no-cors',
+                    mode: 'cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(bodyIn)
                 }
@@ -319,7 +319,7 @@ export const useUserStore = defineStore('userStore', {
                 }
                 const requestOptions = {
                     method: `POST`, // POST, etc
-                    mode: 'no-cors',
+                    mode: 'cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(bodyIn)
                 }

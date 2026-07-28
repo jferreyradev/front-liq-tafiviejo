@@ -2,9 +2,9 @@ import { ref } from 'vue';
 
 const endpoints = {
   prod: {
-    boletas: 'https://dno-mid-tafiviejo-boletas.deno.dev',
-    base: 'https://dno-mid-tafiviejo.deno.dev', 
-    sp: 'https://dno-mid-tafiviejo-boletas.deno.dev'
+    boletas: 'https://dno-mid-boletas.jferreyradev.deno.net',
+    base: 'https://dno-mid-api.jferreyradev.deno.net', 
+    sp: 'https://dno-mid-boletas.jferreyradev.deno.net'
   }
 }
 
@@ -23,6 +23,10 @@ export function useEndPoints() {
   }
 
   function setDesa() {
+    if (!endpoints.desa) {
+      setProd()
+      return
+    }
     apiBase.value = endpoints.desa.base
     apiBoletas.value = endpoints.desa.boletas
     apiSp.value = endpoints.desa.sp

@@ -3,7 +3,7 @@ import { ref } from 'vue';
 const endpoints = {
   prod: {
     boletas: 'https://dno-mid-boletas.jferreyradev.deno.net',
-    base: 'https://dno-mid-api.jferreyradev.deno.net', 
+    base: 'https://dno-mid-api-qt3ngtmrrm1y.jferreyradev.deno.net', 
     sp: 'https://dno-mid-boletas.jferreyradev.deno.net'
   }
 }

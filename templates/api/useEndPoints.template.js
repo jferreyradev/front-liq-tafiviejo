@@ -1,10 +1,15 @@
-import { ref } from 'vue';
+import { ref } from 'vue'
 
 const endpoints = {
   prod: {
-    boletas: 'https://dno-mid-boletas.jferreyradev.deno.net',
-    base: 'https://dno-mid-api-22.jferreyradev.deno.net', 
-    sp: 'https://dno-mid-boletas.jferreyradev.deno.net'
+    boletas: 'https://TU-BOLETAS-ENDPOINT',
+    base: 'https://TU-BASE-ENDPOINT',
+    sp: 'https://TU-SP-ENDPOINT'
+  },
+  desa: {
+    boletas: 'https://TU-BOLETAS-ENDPOINT-DESA',
+    base: 'https://TU-BASE-ENDPOINT-DESA',
+    sp: 'https://TU-SP-ENDPOINT-DESA'
   }
 }
 
@@ -14,12 +19,11 @@ const apiSp = ref(endpoints.prod.sp)
 const env = ref('Prod')
 
 export function useEndPoints() {
-
   function getBoletasHeaders() {
     return {
       'Content-Type': 'application/json',
-      'x-project-key': 'tafiviejo',
-      'x-project-port': '3007'
+      'x-project-key': 'TU_PROJECT_KEY',
+      'x-project-port': 'TU_PROJECT_PORT'
     }
   }
 
@@ -31,10 +35,6 @@ export function useEndPoints() {
   }
 
   function setDesa() {
-    if (!endpoints.desa) {
-      setProd()
-      return
-    }
     apiBase.value = endpoints.desa.base
     apiBoletas.value = endpoints.desa.boletas
     apiSp.value = endpoints.desa.sp
@@ -42,6 +42,12 @@ export function useEndPoints() {
   }
 
   return {
-    apiBase, apiBoletas, apiSp, setDesa, setProd, env,getBoletasHeaders
-  };
+    apiBase,
+    apiBoletas,
+    apiSp,
+    env,
+    setProd,
+    setDesa,
+    getBoletasHeaders
+  }
 }

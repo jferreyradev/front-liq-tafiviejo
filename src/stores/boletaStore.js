@@ -3,9 +3,9 @@ import { ref } from 'vue'
 import { PDFDocument, StandardFonts, rgb, PageSizes, BlendMode } from 'pdf-lib'
 import download from 'downloadjs'
 import logo from '../assets/logo.png'
-import { useEndPoints } from '@/composables/useEndPoints'
+import { useApiClient } from '@/composables/useApiClient'
 
-const { apiBase } = useEndPoints()
+const apiClient = useApiClient()
 
 export const useBoletatxt = defineStore('boletatxt', () => {
   const text = ref('')
@@ -17,13 +17,17 @@ export const useBoletatxt = defineStore('boletatxt', () => {
     idliq.value = id
 
     try {
-      const resp1 = await fetch(`${apiBase.value}/api/view/boletaCabPie?IdLiq=${idliq.value}`)
+      cab.value = await apiClient.get({
+        service: 'base',
+        path: '/api/view/boletaCabPie',
+        query: { IdLiq: idliq.value }
+      })
 
-      cab.value = await resp1.json()
-
-      const resp = await fetch(`${apiBase.value}/api/view/boletaDetalle?IdLiq=${idliq.value}`)
-
-      det.value = await resp.json()
+      det.value = await apiClient.get({
+        service: 'base',
+        path: '/api/view/boletaDetalle',
+        query: { IdLiq: idliq.value }
+      })
     } catch (error) {
       console.log(error)
     }
@@ -166,7 +170,7 @@ export const useBoletatxt = defineStore('boletatxt', () => {
     let filename = ''
     let idLiq = 0
 
-    if ((cab.value.length = 1 && cab.value.length > 0)) {
+    if (cab.value.length === 1 && cab.value.length > 0) {
       const line = cab.value[0]
 
       cadenacab += line['C1'] + '\n'

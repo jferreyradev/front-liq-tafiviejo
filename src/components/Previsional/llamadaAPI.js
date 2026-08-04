@@ -1,6 +1,6 @@
 import { useEndPoints } from '@/composables/useEndPoints'
 
-const { apiBase, apiSp } = useEndPoints()
+const { apiBase, apiSp, getBoletasHeaders } = useEndPoints()
 
 //const urlAPI = 'http://www.serverburru2.duckdns.org:3005/api/'
 //const urlAPI_sp = 'https://josrferreyr-deno-api-su-79.deno.dev/'
@@ -19,6 +19,7 @@ export async function grabarRegistro(url = '', data = {}, metodo = 'POST') {
       cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
       //credentials: 'same-origin', // include, *same-origin, omit
       headers: {
+        ...getBoletasHeaders(),
         'Content-Type': 'application/json'
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -51,7 +52,8 @@ export async function eliminarRegistro(url = '', metodo = 'DELETE') {
   try {
     const response = await fetch(getUrlAPI() + url, {
       method: metodo, // *GET, POST, PUT, DELETE, etc.
-      mode: 'cors' // no-cors, *cors, same-origin
+      mode: 'cors', // no-cors, *cors, same-origin
+      headers: getBoletasHeaders()
       //cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
       //credentials: 'same-origin' // include, *same-origin, omit
       //headers: {
@@ -86,7 +88,7 @@ export async function leerDatos(url) {
   console.log(getUrlAPI() + url)
   let response = null
   try {
-    response = await fetch(getUrlAPI() + url)
+    response = await fetch(getUrlAPI() + url, { headers: getBoletasHeaders() })
     estado = response.status
     console.log(response)
     if (response.ok) {
@@ -122,6 +124,7 @@ export async function ejecutarSP(url = '', data = {}, metodo = 'POST') {
       cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
       credentials: 'same-origin', // include, *same-origin, omit
       headers: {
+        ...getBoletasHeaders(),
         'Content-Type': 'application/json'
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -155,6 +158,7 @@ export async function descargaTXT(url) {
   const response = await fetch(urlDescargar, {
     method: 'GET',
     headers: {
+      ...getBoletasHeaders(),
       // Asegúrate de que este encabezado sea compatible con la API
       'Content-Type': 'text/plain'
     }

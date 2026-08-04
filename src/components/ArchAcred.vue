@@ -9,7 +9,7 @@ import { useFetch } from '@/composables/useFetch'
 const preview = ref(false)
 
 
-const { apiBase } = useEndPoints()
+const { apiBase, getBoletasHeaders } = useEndPoints()
 
 const store = useFilterStore()
 
@@ -30,6 +30,7 @@ const getTxtFromAPI = async (url) => {
   const response = await fetch(url, {
     method: 'GET',
     headers: {
+      ...getBoletasHeaders(),
       // Asegúrate de que este encabezado sea compatible con la API
       'Content-Type': 'text/plain'
     }

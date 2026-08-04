@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { useEndPoints } from '@/composables/useEndPoints'
 
-const { apiBase} = useEndPoints()
+const { apiBase, getBoletasHeaders } = useEndPoints()
 
 const liqMap = new Map([
   ['1', 'Mensual'],
@@ -55,7 +55,9 @@ export const useFilterStore = defineStore('filter', {
       await this.setPer()      
     },
     setPer() {
-      fetch(`${apiBase.value}/api/view/periodo?Activo=1`)
+      fetch(`${apiBase.value}/api/view/periodo?Activo=1`, {
+        headers: getBoletasHeaders()
+      })
         .then((res) => res.json())
         .then((_data) => {
           this.year = _data[0].PERIODO.split('-')[0]
@@ -66,7 +68,9 @@ export const useFilterStore = defineStore('filter', {
         })
     },
     setConfig() {
-      fetch(`${apiBase.value}/api/view/configServer`)
+      fetch(`${apiBase.value}/api/view/configServer`, {
+        headers: getBoletasHeaders()
+      })
         .then((res) => res.json())
         .then((_data) => {
           this.serverConfig = _data[0]

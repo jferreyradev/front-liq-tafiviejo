@@ -5,7 +5,7 @@ import { useFilterStore } from '@/stores/filterStore'
 import { useEndPoints } from '@/composables/useEndPoints'
 import { useFetch } from '@/composables/useFetch'
 
-const { apiBase } = useEndPoints()
+const { apiBase, getBoletasHeaders } = useEndPoints()
 
 const store = useFilterStore()
 
@@ -26,6 +26,7 @@ const getTxtFromAPI = async (url) => {
   const response = await fetch(url, {
     method: 'GET',
     headers: {
+      ...getBoletasHeaders(),
       // Asegúrate de que este encabezado sea compatible con la API
       'Content-Type': 'text/plain'
     }
@@ -39,7 +40,7 @@ const getTxtFromAPI = async (url) => {
 }
 
 const getResumenIPSST = async (url) => {
-  const response = await fetch(url)
+  const response = await fetch(url, { headers: getBoletasHeaders() })
   if (!response.ok) {
     return null
   }

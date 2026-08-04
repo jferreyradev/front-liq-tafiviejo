@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { useEndPoints } from '@/composables/useEndPoints'
 
-const { apiBase, apiBoletas} = useEndPoints()
+const { apiBase, apiBoletas, getBoletasHeaders } = useEndPoints()
 
 export const useUserStore = defineStore('userStore', {
     state: () => ({
@@ -29,7 +29,9 @@ export const useUserStore = defineStore('userStore', {
     actions: {
         getConfig() {
             this.isPending = true
-            fetch(`${apiBoletas.value}/config`)
+            fetch(`${apiBoletas.value}/config`,{
+                headers: getBoletasHeaders()
+            })
               .then((res) => res.json())
               .then((_data) => {
                 console.log(_data)
@@ -43,7 +45,9 @@ export const useUserStore = defineStore('userStore', {
           },
         getUsers() {
             this.loading = true
-            fetch(`${apiBoletas.value}/users`)
+            fetch(`${apiBoletas.value}/users`,{
+                headers: getBoletasHeaders()
+                })
               .then((res) => res.json())
               .then((_data) => {
                 this.users = _data
@@ -65,7 +69,7 @@ export const useUserStore = defineStore('userStore', {
               const requestOptions = {
                 method: `POST`, // POST, etc
                 mode: 'cors',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', ...getBoletasHeaders() },
                 body: JSON.stringify(bodyIn)
               }
               const res = await fetch(`${apiBoletas.value}/estadoUsuario`, requestOptions)
@@ -115,7 +119,9 @@ export const useUserStore = defineStore('userStore', {
             try {
                 console.log('try user', dni, `${apiBoletas.value}/user/${dni}`)
 
-                const response = await fetch(`${apiBoletas.value}/user/${dni}`) // Cambia la URL a la de tu API
+                const response = await fetch(`${apiBoletas.value}/user/${dni}`, {
+                    headers: getBoletasHeaders()
+                }) // Cambia la URL a la de tu API
                 if (!response.ok) {
                     throw new Error('Error fetching user')
                 }
@@ -136,7 +142,9 @@ export const useUserStore = defineStore('userStore', {
             this.auth = false
             try {
                 console.log(`${apiBase.value}/api/view/users?UserName=${userName}`)
-                const response = await fetch(`${apiBase.value}/api/view/users?UserName=${userName}`) // Cambia la URL a la de tu API
+                const response = await fetch(`${apiBase.value}/api/view/users?UserName=${userName}`, {
+                    headers: getBoletasHeaders()
+                }) // Cambia la URL a la de tu API
                 if (!response.ok) {
                     throw new Error('Error fetching user')
                 }
@@ -156,7 +164,9 @@ export const useUserStore = defineStore('userStore', {
             this.user = null
             this.auth = false
             try {
-                const response = await fetch(`${apiBase.value}/api/view/users?email=${email}`) // Cambia la URL a la de tu API
+                const response = await fetch(`${apiBase.value}/api/view/users?email=${email}`, {
+                    headers: getBoletasHeaders()
+                }) // Cambia la URL a la de tu API
                 if (!response.ok) {
                     throw new Error('Error fetching user')
                 }
@@ -175,7 +185,9 @@ export const useUserStore = defineStore('userStore', {
             this.success = false
             try {
                 console.log(`${apiBase.value}/api/view/frontMenuRol?IdRol=${this.user.ROL}&sort={"IdMenu":"asc"}`)
-                const response = await fetch(`${apiBase.value}/api/view/frontMenuRol?IdRol=${this.user.ROL}&sort={"IdMenu":"asc"}`) // Cambia la URL a la de tu API
+                const response = await fetch(`${apiBase.value}/api/view/frontMenuRol?IdRol=${this.user.ROL}&sort={"IdMenu":"asc"}`, {
+                    headers: getBoletasHeaders()
+                }) // Cambia la URL a la de tu API
                 if (!response.ok) {
                     throw new Error('Error fetching user')
                 }
@@ -216,8 +228,10 @@ export const useUserStore = defineStore('userStore', {
             try {
                 console.log('try pers', dni, `${apiBoletas.value}/persona/${dni}`)
 
-                const response = await fetch(`${apiBoletas.value}/persona/${dni}`)
-
+                const response = await fetch(`${apiBoletas.value}/persona/${dni}`, {
+                    headers: getBoletasHeaders()
+                }) // Cambia la URL a la de tu API
+               
                 if (!response.ok) {
                     throw new Error('Error fetching user')
                 }
@@ -243,7 +257,9 @@ export const useUserStore = defineStore('userStore', {
             try {
                 console.log('try pers', dni, `${apiBoletas.value}/personacargo/${dni}`)
 
-                const response = await fetch(`${apiBoletas.value}/personacargo/${dni}`)
+                const response = await fetch(`${apiBoletas.value}/personacargo/${dni}`, {
+                    headers: getBoletasHeaders()
+                }) // Cambia la URL a la de tu API
 
                 if (!response.ok) {
                     throw new Error('Error fetching user')
@@ -270,7 +286,7 @@ export const useUserStore = defineStore('userStore', {
                 const requestOptions = {
                     method: `POST`, // POST, etc
                     mode: 'cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json' , ...getBoletasHeaders()},
                     body: JSON.stringify(bodyIn)
                 }
                 await fetch(`${apiBoletas.value}/user`, requestOptions)
@@ -295,7 +311,7 @@ export const useUserStore = defineStore('userStore', {
                 const requestOptions = {
                     method: `POST`, // POST, etc
                     mode: 'cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json' , ...getBoletasHeaders()},
                     body: JSON.stringify(bodyIn)
                 }
                 await fetch(`${apiBoletas.value}/claveUsuario`, requestOptions)
@@ -320,7 +336,7 @@ export const useUserStore = defineStore('userStore', {
                 const requestOptions = {
                     method: `POST`, // POST, etc
                     mode: 'cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json' , ...getBoletasHeaders()},
                     body: JSON.stringify(bodyIn)
                 }
                 await fetch(`${apiBoletas.value}/claveUsuario`, requestOptions)

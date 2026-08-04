@@ -6,10 +6,12 @@ import RepoHeader from './RepoHeader.vue'
 import { useLiqStore } from '@/stores/liqStore.js'
 import { useEndPoints } from '@/composables/useEndPoints'
 import { useBoletatxt } from '@/stores/boletaStore'
+import { useApiClient } from '@/composables/useApiClient'
 
 
 
 const { apiBase } = useEndPoints()
+const apiClient = useApiClient()
 
 const store = useFilterStore()
 
@@ -67,6 +69,27 @@ async function handleDownloadPdf(idliq) {
   await liqStoreBoleta.createPdf()
 }
 
+async function downloadBoleta(idliq) {
+  try {
+    const blob = await apiClient.get({
+      service: 'base',
+      path: '/api/boleta',
+      query: { IdLiq: idliq },
+      responseType: 'blob'
+    })
+    const urlSalida = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = urlSalida
+    a.download = `boleta_${idliq}.pdf`
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    window.URL.revokeObjectURL(urlSalida)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 </script>
 
 <template>
@@ -103,7 +126,7 @@ async function handleDownloadPdf(idliq) {
           </template>
 
           <template v-slot:item.LIQUIDACIONID="{ value }">
-            <a :href="apiBase + '/api/boleta?IdLiq=' + value" target="_blank" >descargar</a>
+            <v-btn size="small" variant="outlined" @click="downloadBoleta(value)">descargar</v-btn>
              <!-- <v-btn @click="handleDownloadPdf(value)">Descargar</v-btn>  -->
           </template>
         </v-data-table>
